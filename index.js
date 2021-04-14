@@ -227,7 +227,11 @@ console.log( cond < 100 ? '<100' : cond < 200 ? '100-200' : '>200');
 var aa;
 var aa;
 let bb;
-// let bb; // error, can't let a variable twice
+try {
+    let bb; // error, can't let a variable twice
+} catch (error) {
+    console.log(error);
+}
 
 // var is global
 
@@ -248,15 +252,214 @@ function scopeTest()
     console.log(letVar);
     console.log(varVar);
     console.log(varVar1);
-    //console.log(letVar1); // error: letVar1 is nott defined
+    try {
+        console.log(letVar1); // error: letVar1 is nott defined
+    } catch (error) {
+        console.log(error);
+    }
 }
+scopeTest();
 
 // const is same as let but can't be reassign
 const CONST_VAL = 123;
-// CONST_VAL = 456; // can't be reasigned
-scopeTest();
-// use strict
-function namexx() {
-    'use strict' // must put in the start of the function / the start of the doc
-    // vv123 = 'hey'; // error this is a strict function
+try {
+    CONST_VAL = 456; // can't be reasigned
+} catch (error) {
+    console.log(error);
 }
+
+const constArray = [1,2,3];
+try {
+    constArray = [1,1,1]; // error, can't reassign const array
+} catch (error) {
+    console.log(error);
+}
+// const array's element may be modified
+constArray[1] = 10;
+constArray.push(5);
+console.log(constArray);
+
+Object.freeze(constArray);
+try {
+    constArray[1] = 100;
+} catch (error) {
+    console.log(error);
+}
+
+try {
+    constArray.push(100);
+} catch (error) {
+    console.log(error);
+    
+}
+
+
+// use strict
+function nameX() {
+    'use strict' // must put in the start of the function / the start of the doc
+    try {
+        vv123 = 'hey'; // error this is a strict function
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+nameX();
+
+console.log(parseInt('1111',2));
+console.log(parseInt('77',8));
+console.log(parseInt('FF',16));
+
+let annonymousFunc = function (params) {
+  return new Date();  
+}
+let annonymousFunc1 = (params) => {
+  return new Date();  
+};
+
+const annonymousFunc2 = (params) => new Date();  
+
+console.log(annonymousFunc());
+console.log(annonymousFunc1());
+console.log(annonymousFunc2());
+
+let testArr1 = [4, 3.1,-8.2,4.2 ,41, 5,6.2 ,-2];
+let squaredInt = testArr1.filter(num => Number.isInteger(num) && num > 0).map(x => x*x);
+
+// default parameter
+const increment = function(number, inc = 1)
+{
+    return number + inc;
+}
+console.log(increment(3));
+console.log(increment(3,10));
+
+const sum = function(...args) {
+    return args.reduce((a,b)=>a * b,1);
+}
+
+const arr3 = [ 1,1,1,1];
+let arr4 = arr3;
+arr3[0] = 100;
+console.log(arr4);
+
+let arr5 = [...arr3];
+arr3[1] = 100;
+console.log(arr5);
+
+let LOCAL_FORCAST = {
+    today: { min: 72, max: 83},
+    tomorrow: {min: 73.3, max: 84.6}
+};
+
+function getMaxOfTmrw(forcast) {
+    "use strict";
+
+    let { tomorrow:{ max : maxOfTmrw}} = forcast;
+    return maxOfTmrw;
+}
+console.log(getMaxOfTmrw(LOCAL_FORCAST));
+// only pass in what is needed
+function todayAvg({today})
+{
+    return (today.max+today.min) / 2.0;
+}
+console.log(todayAvg(LOCAL_FORCAST));
+
+
+
+let [x,y,,z] = [1,2,3,4,5,6];
+console.log(x,y,z);
+
+let a = 8, b= 6;
+[a,b] = [b,a];
+console.log(a,b)
+let [,,...cutArr] = [1,2,3,4,5,6,7,8,9];
+console.log(cutArr);
+
+// template literal
+let greeting = `hi,I'm ${person.name}!
+I'm ${person.age}`;
+console.log(greeting);
+
+let result = {
+    failure: ["no-var","var-on-top","linebreak"]
+}
+
+let resultDisplayArray = [];
+for (let index = 0; index < result.failure.length; index++) {
+    resultDisplayArray.push(`<li class="text-warning">${result.failure[index]}</li>`)
+}
+console.log(resultDisplayArray);
+
+const createPerson = (name,age,gender) => {
+    return {
+        name: name,
+        age: age,
+        gender: gender
+    };
+};
+const createPersonEasy = (name,age,gender) => ({ name, age,gender});
+
+console.log(createPerson("Taco",33,"M"));
+console.log(createPersonEasy("Taco",33,"M"));
+
+let bike ={
+    gear: 2,
+    setGear: function (newGear) {
+        this.gear = newGear;   
+    },
+    easySetGear(newGear){
+        this.gear = newGear;   
+    }
+}
+bike.setGear(5)
+console.log(bike.gear)
+bike.easySetGear(7)
+console.log(bike.gear)
+
+// constructor
+
+let SpaceShuttle = function (targetPlanet) {
+    this.targetPlanet = targetPlanet;
+}
+
+let zeus = new SpaceShuttle('Jupiter');
+console.log(zeus)
+
+class ClassSpaceShuttle {
+    constructor(targetPlanet){
+        this.targetPlanet = targetPlanet;
+    }
+}
+let zeus1 = new ClassSpaceShuttle('Jupiter');
+console.log(zeus1)
+
+class Book{
+    constructor(author){
+        this._author = author;
+    }
+    //getter
+    get writer(){
+        return "!!!" + this._author;
+    }
+    //setter
+    set writer(updateAuthor){
+        this._author = updateAuthor + "!!!";
+    }
+}
+let myBook = new Book('a1');
+console.log(myBook.writer)
+myBook.writer='a2'
+console.log(myBook.writer)
+
+
+//import
+// need to adjust type=module in html;
+import { capStr }  from "./string_function.js"
+console.log(capStr('abc'));
+import * as MyStringFunctions  from "./string_function.js"
+console.log(MyStringFunctions.expVar1)
+// import default
+import someNameHere from "./expDefault.js"
+console.log(someNameHere())
